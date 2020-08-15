@@ -9,10 +9,10 @@ class Lydia(commands.Cog):
     def __init__(self,client):
         self.lydia = LydiaAI("69e6f26aba27d05e14c6a48e38008bc0794e24c1d25591db00575e9ce93c577ca934724981a540c319c7da3209ca4c0f910098c14ad6b5e27902c346c9f5cf7f")
         self.client = client
-        self.conn = sqlite3.connect('./lydia_sessions.sqlite3')
+        self.conn = sqlite3.connect('./db.sqlite3')
         self.cur = self.conn.cursor()
 
-    @commands.command(aliases=["lydia"])
+    @commands.command(aliases=["lydia"], brief="Have a chat with Lydia", usage="<chat>")
     async def ai(self, ctx, *, quest):
         self.cur.execute(f'SELECT * FROM sessions WHERE user_id="{ctx.author.id}"')
         query = self.cur.fetchone()
@@ -31,19 +31,19 @@ class Lydia(commands.Cog):
                 self.cur.execute(f"INSERT INTO sessions VALUES ('{ctx.author.id}','{session.id}','{session.expires}')")
                 self.conn.commit()
 
-
-                reply = session.think_thought(quest)
-                await ctx.send(reply)
+                await ctx.send(session.think_thought(quest))
                 #or alternatively
-                #await ctx.send(session.think_thought(quest))
+                #reply = session.think_thought(quest)
+                #await ctx.send(reply)
+
             else:
-                reply = self.lydia.think_thought(query[1], quest)
-                await ctx.send(reply)
+                await ctx.send(self.lydia.think_thought(query[1], quest))
                 #or alternatively
-                #await ctx.send(session.think_thought(quest))
+                #reply = self.lydia.think_thought(query[1], quest)
+                #await ctx.send(reply)
 
-        #remember to comment this out if you use the alternatives above
-        print(f"[<]{ctx.message.author}: {quest}\n[>]{reply}")
+        #uncomment this if you use the alternatives
+        #print(f"[<]{ctx.message.author}: {quest}\n[>]{reply}")
 
 
 def setup(client):
