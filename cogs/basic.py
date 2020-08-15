@@ -11,7 +11,7 @@ class Basic(commands.Cog):
     async def ping(self, ctx):
         await ctx.send("pong!")
 
-    @commands.command()
+    @commands.command(aliases=["cp"], brief="Change the guild-wide bot prefix", usage="<prefix>")
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def changeprefix(self, ctx, *, prefix):
