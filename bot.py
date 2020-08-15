@@ -20,6 +20,10 @@ def get_prefix(client, message):
 client = commands.Bot(command_prefix = get_prefix)
 
 @client.event
+async def on_ready():
+    await client.change_presence(activity=discord.Game(name="$help"))
+
+@client.event
 async def on_guild_join(guild):
     print(dir(guild))
     print(guild.id)
