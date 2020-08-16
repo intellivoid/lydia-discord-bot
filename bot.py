@@ -25,8 +25,6 @@ async def on_ready():
 
 @client.event
 async def on_guild_join(guild):
-    print(dir(guild))
-    print(guild.id)
 
     conn = sqlite3.connect('db.sqlite3')
     curr = conn.cursor()
