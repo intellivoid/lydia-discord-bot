@@ -9,7 +9,7 @@ class Basic(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx):
-        await ctx.send("pong!")
+        await ctx.send(f"Pong! **{round(self.client.latency*1000, 1)}ms**")
 
     @commands.command(aliases=["cp"], brief="Change the guild-wide bot prefix", usage="<prefix>")
     @commands.guild_only()
