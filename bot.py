@@ -5,17 +5,23 @@ from discord.ext import commands
 import os, sqlite3
 
 def get_prefix(client, message):
-    conn = sqlite3.connect('db.sqlite3')
-    curr = conn.cursor()
-    curr.execute(f'SELECT * FROM guilds WHERE guild_id="{message.guild.id}"')
-    query = curr.fetchone()
+    try:
+        conn = sqlite3.connect('db.sqlite3')
+        curr = conn.cursor()
+        curr.execute(f'SELECT * FROM guilds WHERE guild_id="{message.guild.id}"')
+        query = curr.fetchone()
 
-    if query == None:
-        curr.execute(f"INSERT INTO guilds VALUES ('{message.guild.id}','$')")
-        conn.commit()
+        if query == None:
+            curr.execute(f"INSERT INTO guilds VALUES ('{message.guild.id}','$')")
+            conn.commit()
+            prefix = "$"
+        else:
+            prefix = query[1]
+        conn.close()
+        return prefix
+    except AttributeError:
+        conn.close()
         return "$"
-    else:
-        return query[1]
 
 client = commands.Bot(command_prefix = get_prefix)
 
